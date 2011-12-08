@@ -8,6 +8,5 @@ setup(
       name=name,
       version=version,
       description='Python DSaS client - using REST',
-      #py_modules=['dsas.rest_dsas_client'],
       packages=["dsas"],
       )
