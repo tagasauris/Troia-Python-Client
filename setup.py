@@ -1,7 +1,13 @@
 from distutils.core import setup
 
-setup(name='dsas',
+name = 'dsas-client'
+version = '0.1'
 
-      version='1.0',
-      py_modules=['dsas'],
+
+setup(
+      name=name,
+      version=version,
+      description='Python DSaS client - using REST',
+      #py_modules=['dsas.rest_dsas_client'],
+      packages=["dsas"],
       )
