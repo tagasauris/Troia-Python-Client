@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from rest_dsas_client import DSaS
+from dsas import DSaS
 
 class TestClient(unittest.TestCase):
     

@@ -2,7 +2,7 @@ import sys
 import csv
 import pprint
 
-from rest_dsas_client import DSaS
+from dsas import DSaS
 
 
 

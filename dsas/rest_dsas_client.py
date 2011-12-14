@@ -33,6 +33,18 @@ class DSaS(object):
     def exists(self, idd=None):
         return self._do_request_get("exists", {'id':idd})
     
+    def _generate_miss_costs(self, labels, label):
+        d = dict([(x, 1.) for x in labels if x!=label])
+        d[label] = 0.
+        return d
+    
+    def load_categories_def_costs(self, categories, idd=None):
+        categories = [{'name':c, 'prior':self.PRIORITY,
+             'misclassification_cost':self._generate_miss_costs(categories, c)}
+                                                for c in categories]
+        return self._do_request_post("loadCategories",
+                                        {'id':idd, 'categories':categories})
+        
     def load_categories(self, categories, idd=None):
         '''costs should be iterable with iterables in form:
         (name, dict-misclassification_cost { class_ : cost })
