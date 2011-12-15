@@ -34,8 +34,8 @@ class TestClient(unittest.TestCase):
         self.dsas.reset(self.ID)
     
     def testSetUp(self):
-        self.assertEqual('true', self.dsas.exists(self.ID))
-        self.assertEqual('false', self.dsas.exists(self.ID+"0"))
+        self.assertTrue(self.dsas.exists(self.ID))
+        self.assertFalse(self.dsas.exists(self.ID+"0"))
         
     def testPing(self):
         r = self.dsas.ping()
@@ -46,18 +46,18 @@ class TestClient(unittest.TestCase):
     def testReset(self):
         r = self.dsas.reset(self.ID)
         self.assertTrue(r.startswith("nullified the ds object"))
-        self.assertEqual('false', self.dsas.exists(self.ID))
+        self.assertFalse(self.dsas.exists(self.ID))
         
     def testExists(self):
-        self.assertEqual("false", self.dsas.exists(self.ID+"0"))
-        self.assertEqual("true", self.dsas.exists(self.ID))
+        self.assertFalse(self.dsas.exists(self.ID+"0"))
+        self.assertTrue(self.dsas.exists(self.ID))
     
     def testLoadCategories(self):
         ID=self.ID+"10"
         self.dsas.reset(ID)
-        self.assertEqual('false', self.dsas.exists(ID))
+        self.assertFalse(self.dsas.exists(self.ID))
         self.dsas.load_categories(self._labels(), ID)
-        self.assertEqual('true', self.dsas.exists(ID))
+        self.assertTrue(self.dsas.exists(self.ID))
         r = self.dsas.get_dawid_skene(self.ID)
         for k, v in r['categories'].iteritems():
             self.assertTrue(k in self.labels)
@@ -68,7 +68,6 @@ class TestClient(unittest.TestCase):
                     self.assertEqual(0., c)
                 else:
                     self.assertEqual(self.miss_class_cost, c)
-        self.dsas.reset(ID)
     
     def testLoadCosts(self):
         self.dsas.load_costs(

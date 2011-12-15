@@ -31,7 +31,8 @@ class DSaS(object):
         return self._do_request_get("reset", {'id':idd})
     
     def exists(self, idd=None):
-        return self._do_request_get("exists", {'id':idd})
+        r = self._do_request_get("exists", {'id':idd})
+        return r.lower() in ['true', 't']
     
     def _generate_miss_costs(self, labels, label):
         d = dict([(x, 1.) for x in labels if x!=label])
