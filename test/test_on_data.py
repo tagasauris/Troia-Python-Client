@@ -2,9 +2,8 @@ import sys
 import csv
 import pprint
 
+sys.path.append('../')
 from dsas import DSaS
-
-
 
 def load_costs(path):
     cost = csv.reader(open(path+"/costs"), delimiter='\t')
@@ -19,6 +18,8 @@ def load_costs(path):
 
 def load_correct(path):
     correct = csv.reader(open(path+"/correct"), delimiter='\t')
+    correct = [x[-2:] for x in correct]
+    print correct
     return [{"objectName": s, "correctCategory": v} for s, v in correct]
     
 def load_input(path):
@@ -27,8 +28,11 @@ def load_input(path):
                                                     for wn, on, cn in inputt]
     
 def load_all(path):
-    return [list(csv.reader(open(path+s), delimiter='\t')) for s in 
+    r = [list(csv.reader(open(path+s), delimiter='\t')) for s in 
                                         ['/correct', '/costs', '/input']]
+    r[0] = [x[-2:] for x in r[0]]
+    return r
+
 def transform_cost(cost):
     dictt = {}
     for c1, c2, cost_ in cost:

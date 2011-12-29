@@ -132,6 +132,7 @@ class TestClient(unittest.TestCase):
     
     def testPrintWorkerSummary(self):
         self.dsas.load_worker_assigned_labels(self.assigned_labels, self.ID)
+        self.dsas.compute_blocking(10, self.ID)
         r = self.dsas.print_worker_summary(True, self.ID)
         self.assertEqual(10, r.count("Confusion Matrix:"))
         self.assertEqual(10, r.count("Number of Annotations: 1"))
@@ -171,6 +172,7 @@ class TestClient(unittest.TestCase):
         gold_labels = [{"objectName":self.objects[0],"correctCategory":"dog"},
                     {"objectName":self.objects[-1],"correctCategory":"pig"},]
         self.dsas.load_gold_labels(gold_labels, self.ID)
+        self.dsas.compute_blocking(3, self.ID)
         r = self.dsas.get_dawid_skene(self.ID)
         for k in ["workers", "objects", "id", "fixedPriors", "categories"]:
             self.assertTrue(k in r.keys())
