@@ -1,0 +1,3 @@
+progressbar
+python-rest-client
+
