@@ -40,7 +40,7 @@ def gen_items(opts):
 
 def run_simulation(opts):
     dsas = DSaS(url)
-    dsas.reset(opts.ID)
+#    dsas.reset(opts.ID)
     dsas.load_categories(
         [(labels[i],{labels[i]:0., labels[1-i]:1.}) for i in xrange(2)], opts.ID)
     workers, objects, golds = gen_items(opts)

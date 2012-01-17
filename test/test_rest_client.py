@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import unittest
 
@@ -6,9 +7,8 @@ from dsas import DSaS
 class TestClient(unittest.TestCase):
     
     base_url = "http://localhost:8080/GetAnotherLabel/rest/"
-    labels = ["dog", "cat", "pig"]
-    objects = ["o_dog_0", "o_dog_1", "o_cat_0", "o_pig_0", "o_pig_1"]
-    #workers = ["worker-0", "worker-1"]
+    labels = [u"dog", "cat", "pig"]
+    objects = [u"o_dog_0", u"o_dog_1", "o_cat_0", "o_pig_0", "o_pig_1"]
     prior = .314
     miss_class_cost = .141
 
@@ -53,12 +53,12 @@ class TestClient(unittest.TestCase):
         self.assertTrue(self.dsas.exists(self.ID))
     
     def testLoadCategories(self):
-        ID=self.ID+"10"
+        ID=self.ID+"AnotherTestID"
         self.dsas.reset(ID)
-        self.assertFalse(self.dsas.exists(self.ID))
+        self.assertFalse(self.dsas.exists(ID))
         self.dsas.load_categories(self._labels(), ID)
-        self.assertTrue(self.dsas.exists(self.ID))
-        r = self.dsas.get_dawid_skene(self.ID)
+        self.assertTrue(self.dsas.exists(ID))
+        r = self.dsas.get_dawid_skene(ID)
         for k, v in r['categories'].iteritems():
             self.assertTrue(k in self.labels)
             self.assertEqual(v['name'], k)
@@ -68,19 +68,24 @@ class TestClient(unittest.TestCase):
                     self.assertEqual(0., c)
                 else:
                     self.assertEqual(self.miss_class_cost, c)
+        self.dsas.reset(ID)
+        
     
     def testLoadCosts(self):
         self.dsas.load_costs(
-            [("dog","cat", 0.511)], self.ID)
+            [(u"dog","cat", 0.511)], self.ID)
         r = self.dsas.get_dawid_skene(self.ID)
         self.assertEqual(0.511,
-                    r['categories']['dog']['misclassification_cost']['cat'])
+                r['categories'][u'dog']['misclassification_cost']['cat'])
 
     def testAssignLabel(self):
         job = self.assigned_labels[0]
         self.dsas.load_worker_assigned_label(job[0], job[1], job[2], self.ID)
         r = self.dsas.get_dawid_skene(self.ID)
         resp = r['workers'][job[0]]['labels'][0]
+        print job
+        sorted(job)
+        sorted(resp.values())
         self.assertEqual(sorted(job), sorted(resp.values()))
 
     def testAssignLabels(self):
@@ -92,7 +97,7 @@ class TestClient(unittest.TestCase):
 #            self.assertEqual(job, r[job['workerName']]['labels'][0])
     
     def testGoldLabel(self):
-        item = (self.objects[0], "dog")
+        item = (self.objects[0], u"dog")
         self.dsas.load_gold_label(item[0], item[1], self.ID)
         r = self.dsas.get_dawid_skene(self.ID)['objects']
         self.assertEqual(item[1], r[item[0]]["correctCategory"])

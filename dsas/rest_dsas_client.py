@@ -1,4 +1,4 @@
-from restful_lib import Connection
+import requests
 import json
 
 class DSaS(object):
@@ -6,23 +6,29 @@ class DSaS(object):
     PRIORITY = 1.
     
     def __init__(self, base_url):
-        self.conn = Connection(base_url)
+        self.url = base_url
+        self.json_before = True
+        if not self.url.endswith('/'):
+            self.url += '/'
 
-    def disconnect(self):
-        pass
-        # I think that something like this should be.. 
-        
-    def _do_request_get(self, name, args=None, headers=None):
-        headers = headers or {}
+    def jsonify(self, args):
         args = args or {}
-        req = self.conn.request_get(name, args=args, headers=headers)
-        return req['body']
+        if not self.json_before:
+            return args
+        new_args = {}
+        for k, v in args.iteritems():
+            new_args[k] = json.dumps(v)
+        return new_args
+    
+    def _do_request_get(self, name, args=None):
+        args = self.jsonify(args)
+        req = requests.get(self.url + name, params=args)
+        return req.content
 
-    def _do_request_post(self, name, args=None, headers=None):
-        headers = headers or {}
-        args = args or {}
-        req = self.conn.request_post(name, args=args, headers=headers)
-        return req['body']
+    def _do_request_post(self, name, args=None):
+        args = self.jsonify(args)
+        req = requests.post(self.url+name, data=args)
+        return req.content
     
     def ping(self):
         return self._do_request_get("ping")
