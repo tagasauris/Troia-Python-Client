@@ -49,8 +49,8 @@ def run_simulation(opts):
         if (i+1)%DUMP_FREQ == 0:
             current = time.time()
             duration = current - start_time
-            log.info("Average speed: %s (labels/sec)                        ",
-                                            str(float(DUMP_FREQ)/ duration))
+            log.info("Average speed: %s (labels/sec)  assigned labels: %s         ",
+                                            str(float(DUMP_FREQ)/ duration), str(i))
             start_time = current
             
         r = random.random()
