@@ -7,11 +7,15 @@ class DSaS(object):
 
     PRIORITY = 1.
 
-    def __init__(self, base_url):
+    def __init__(self, base_url, timeout=0.25):
         self.url = base_url
-        self.json_before = True
         if not self.url.endswith('/'):
             self.url += '/'
+        self.json_before = True
+        if timeout <= 0.:
+            self.timeout = None
+        else:
+            self.timeout = timeout
 
     def jsonify(self, args):
         args = args or {}
@@ -24,12 +28,12 @@ class DSaS(object):
 
     def _do_request_get(self, name, args=None):
         args = self.jsonify(args)
-        req = requests.get(self.url + name, params=args)
+        req = requests.get(self.url + name, params=args, timeout=self.timeout)
         return req.content
 
     def _do_request_post(self, name, args=None):
         args = self.jsonify(args)
-        req = requests.post(self.url + name, data=args)
+        req = requests.post(self.url + name, data=args, timeout=self.timeout)
         return req.content
 
     def ping(self):
