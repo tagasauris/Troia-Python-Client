@@ -8,5 +8,9 @@ setup(
       name=name,
       version=version,
       description='Troia Python client - uses REST',
+      install_requires = [
+          'requests',
+          'progressbar'
+      ],
       packages=["troia_client"],
       )
