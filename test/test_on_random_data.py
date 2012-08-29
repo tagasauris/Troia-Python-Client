@@ -5,10 +5,10 @@ import time
 import random
 
 sys.path.append('../')
-from dsas import DSaS
+from troia_client import TroiaClient
 
 logging.basicConfig()
-log = logging.getLogger("DSaS_Performance")
+log = logging.getLogger("Troia_Performance")
 log.setLevel(logging.INFO)
 
 
@@ -39,7 +39,7 @@ def gen_items(opts):
 
 
 def run_simulation(opts):
-    dsas = DSaS(url)
+    dsas = TroiaClient(url)
 #    dsas.reset(opts.ID)
     dsas.load_categories(
         [(labels[i], {labels[i]:0., labels[1 - i]:1.}) for i in xrange(2)], opts.ID)

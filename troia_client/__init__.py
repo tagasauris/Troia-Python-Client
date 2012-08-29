@@ -1,0 +1,1 @@
+from troia_client.rest_troia_client import TroiaClient

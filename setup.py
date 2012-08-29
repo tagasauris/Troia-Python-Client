@@ -1,12 +1,12 @@
 from distutils.core import setup
 
-name = 'dsas-client'
+name = 'troia-python-client'
 version = '0.1'
 
 
 setup(
       name=name,
       version=version,
-      description='Python DSaS client - using REST',
-      packages=["dsas"],
+      description='Troia Python client - uses REST',
+      packages=["troia_client"],
       )

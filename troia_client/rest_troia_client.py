@@ -3,7 +3,7 @@ import json
 import requests
 
 
-class DSaS(object):
+class TroiaClient(object):
 
     PRIORITY = 1.
 

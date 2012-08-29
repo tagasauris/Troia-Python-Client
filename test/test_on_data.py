@@ -3,7 +3,7 @@ import csv
 import pprint
 
 sys.path.append('../')
-from dsas import DSaS
+from troia_client import TroiaClient
 
 
 def load_costs(path):
@@ -60,7 +60,7 @@ def test_all(dsas, correct, cost, inputt):
     print pprint.pprint(dsas.get_dawid_skene(ID))
 
 
-dsas = DSaS("http://localhost:8080/GetAnotherLabel/rest/")
+dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/")
 main_path = "examples/"
 
 data = load_all(sys.argv[1])
