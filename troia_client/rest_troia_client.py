@@ -12,6 +12,7 @@ class TroiaClient(object):
     '''
 
     PRIORITY = 1.
+    ''' Default priority '''
 
     def __init__(self, base_url, timeout=0.25):
         '''
