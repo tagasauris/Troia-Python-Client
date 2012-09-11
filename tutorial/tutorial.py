@@ -74,13 +74,13 @@ def run_troia_on_data(cost_matrix, gold_samples, workers_labels):
     troia_client.load_gold_labels(gold_samples, ID)
     # send samples for which we know correct label
     # we could also do this that way:
-    # for object_id, label in GOLD_SAMPLES:
+    # for object_id, label in gold_samples:
     #     troia_client.load_gold_label(object_id, label, ID)
 
     troia_client.load_worker_assigned_labels(workers_labels, ID)
     # send labels that worker assigned to objects
     # we could also do this that way:
-    # for worker, object_id, label in WORKERS_LABELS:
+    # for worker, object_id, label in workers_labels:
     #     troia_client.load_worker_assigned_label(worker, object_id, label, ID)
 
     troia_client.compute_blocking(ITERATIONS, ID)
