@@ -1,6 +1,7 @@
 import sys
 import csv
 import pprint
+import time
 
 sys.path.append('../')
 from troia_client import TroiaClient
@@ -49,6 +50,8 @@ def transform_cost(cost):
 def test_all(dsas, correct, cost, inputt):
 
     ID = "123"
+    
+    dsas.ping()
     dsas.reset(ID)
 
     cost = transform_cost(cost)
@@ -56,7 +59,8 @@ def test_all(dsas, correct, cost, inputt):
     dsas.load_categories(cost, ID)
     dsas.load_gold_labels(correct, ID)
     dsas.load_worker_assigned_labels(inputt, ID)
-    dsas.compute_blocking(3, ID)
+    dsas.compute(3, ID)
+    time.sleep(3)
     print pprint.pprint(dsas.get_dawid_skene(ID))
 
 
