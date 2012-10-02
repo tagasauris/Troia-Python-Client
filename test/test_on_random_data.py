@@ -39,8 +39,8 @@ def gen_items(opts):
 
 
 def run_simulation(opts):
-    dsas = TroiaClient(url)
-#    dsas.reset(opts.ID)
+    dsas = TroiaClient(url, None)
+    dsas.reset(opts.ID)
     dsas.load_categories(
         [(labels[i], {labels[i]:0., labels[1 - i]:1.}) for i in xrange(2)], opts.ID)
     workers, objects, golds = gen_items(opts)
@@ -54,7 +54,7 @@ def run_simulation(opts):
             start_time = current
 
         r = random.random()
-        if r < opts.gratio:
+        if r < opts.gratio and golds:
             obj = random.choice(golds)
             dsas.load_gold_label(obj, labels[1], opts.ID)
         else:
