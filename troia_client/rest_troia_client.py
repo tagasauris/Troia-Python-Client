@@ -130,7 +130,7 @@ class TroiaClient(object):
         '''
         data = self._create_assign_label(worker, objectn, category)
         return self._do_request_post("loadWorkerAssignedLabel",
-            {'id': idd, 'data': data})
+            {'id': idd, 'label': data})
 
     def load_worker_assigned_labels(self, data, idd=None):
         ''' Adding many votes at once
@@ -140,7 +140,7 @@ class TroiaClient(object):
         '''
         data = [self._create_assign_label(w, o, c) for w, o, c in data]
         return self._do_request_post("loadWorkerAssignedLabels",
-            {'id': idd, 'data': data})
+            {'id': idd, 'labels': data})
 
     def _create_gold_label(self, objectn, category):
         return {"objectName": objectn, "correctCategory": category}
@@ -153,7 +153,7 @@ class TroiaClient(object):
         :param idd: job ID
         '''
         data = self._create_gold_label(objectn, category)
-        return self._do_request_post("loadGoldLabel", {'id': idd, 'data': data})
+        return self._do_request_post("loadGoldLabel", {'id': idd, 'label': data})
 
     def load_gold_labels(self, data, idd=None):
         ''' Adding many gold samples at once
@@ -163,7 +163,7 @@ class TroiaClient(object):
         '''
         data = [self._create_gold_label(on, c) for on, c in data]
         return self._do_request_post("loadGoldLabels",
-            {'id': idd, 'data': data})
+            {'id': idd, 'labels': data})
 
     def majority_vote(self, objectName, idd=None):
         ''' Returns label? for given object using majority votes rule
