@@ -200,7 +200,7 @@ class TroiaClient(object):
         :param iterations: integer with number of iterations to perform
         :param idd: job ID
         '''
-        return self._do_request_get("compute",
+        return self._do_request_get("computeNotBlocking",
             {'id': idd, 'iterations': iterations})
 
 
