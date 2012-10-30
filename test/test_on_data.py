@@ -64,7 +64,7 @@ def test_all(dsas, correct, cost, inputt):
     print pprint.pprint(dsas.get_dawid_skene(ID))
 
 
-dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/")
+dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/", None)
 main_path = "examples/"
 
 data = load_all(sys.argv[1])
