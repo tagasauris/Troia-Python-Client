@@ -193,7 +193,7 @@ class TroiaClient(object):
             {'id': idd, 'iterations': iterations})
 
 
-    def compute(self, iterations, idd=None):
+    def compute_non_blocking(self, iterations, idd=None):
         ''' Starts computations in non-blocking mode.
         See Troia server documentation for more informations.
 
@@ -203,6 +203,11 @@ class TroiaClient(object):
         return self._do_request_get("computeNotBlocking",
             {'id': idd, 'iterations': iterations})
 
+    def compute(self, iterations, idd=None):
+        return self.compute_non_blocking(iterations, idd)
+
+    def is_computed(self, idd=None):
+        return self._do_request_get("isComputed", {'id': idd})
 
     def print_worker_summary(self, verbose, idd=None):
         ''' Returns printable workers summary
