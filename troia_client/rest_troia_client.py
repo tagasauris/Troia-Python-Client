@@ -91,7 +91,7 @@ class TroiaClient(object):
         return self._do_request_post("loadCategories",
             {'id': idd, 'categories': categories})
 
-    def load_categories(self, categories, idd=None):
+    def load_categories(self, categories, idd=None, incremental=None):
         ''' Load categories to Troia server with their cost matrices.
         Costs should be iterable with iterables in form:
 
@@ -107,7 +107,7 @@ class TroiaClient(object):
             'misclassification_cost':d
             } for c, d in categories]
         return self._do_request_post("loadCategories",
-            {'id': idd, 'categories': categories})
+            {'id': idd, 'categories': categories, 'incremental': incremental})
 
     def load_costs(self, costs, idd=None):
         ''' TODO
