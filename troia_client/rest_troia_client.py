@@ -106,8 +106,12 @@ class TroiaClient(object):
             'prior':self.PRIORITY,
             'misclassification_cost':d
             } for c, d in categories]
-        return self._do_request_post("loadCategories",
-            {'id': idd, 'categories': categories, 'incremental': incremental})
+        if incremental == None:
+            return self._do_request_post("loadCategories",
+                    {'id': idd, 'categories': categories})
+        else:
+            return self._do_request_post("loadCategories",
+                     {'id': idd, 'categories': categories, 'incremental': incremental})
 
     def load_costs(self, costs, idd=None):
         ''' TODO
