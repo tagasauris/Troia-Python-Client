@@ -169,6 +169,27 @@ class TroiaClient(object):
         return self._do_request_post("loadGoldLabels",
             {'id': idd, 'labels': data})
 
+    def load_evaluation_label(self, objectn, category, idd=None):
+        ''' Adds gold sample into job
+
+        :param objectn: id of the gold object
+        :param category: true category for this object
+        :param idd: job ID
+        '''
+        data = self._create_gold_label(objectn, category)
+        return self._do_request_post("loadEvaluationData", {'id': idd, 'label': data})
+
+    def load_evaluation_labels(self, data, idd=None):
+        ''' Adding many gold samples at once
+
+        :param data: iterable of tuples in form (object_id, label)
+        :param idd: job ID
+        '''
+        data = [self._create_gold_label(on, c) for on, c in data]
+        return self._do_request_post("loadEvaluationData",
+            {'id': idd, 'labels': data})
+
+
     def majority_vote(self, objectName, idd=None):
         ''' Returns label? for given object using majority votes rule
 
