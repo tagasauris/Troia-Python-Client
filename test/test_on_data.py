@@ -31,9 +31,9 @@ def load_input(path):
                                                     for wn, on, cn in inputt]
 
 
-def load_all(path):
+def load_all(path, prefix="testData_", suffix=".txt"):
     r = [list(csv.reader(open(path + s), delimiter='\t'))
-                            for s in ['/correct', '/costs', '/input']]
+            for s in ['/{}correct{}'.format(prefix, suffix), '/{}costs{}'.format(prefix, suffix), '/{}input{}'.format(prefix, suffix)]]
     r[0] = [x[-2:] for x in r[0]]
     return r
 
@@ -47,9 +47,10 @@ def transform_cost(cost):
     return dictt.items()
 
 
-def test_all(dsas, correct, cost, inputt):
+def test_all(dsas, gold_labels, cost, labels):
 
-    ID = "123"
+    ID = "test123"
+    iter_per_iter = 10
     
     dsas.ping()
     dsas.reset(ID)
@@ -57,16 +58,21 @@ def test_all(dsas, correct, cost, inputt):
     cost = transform_cost(cost)
 
     dsas.load_categories(cost, ID)
-    dsas.load_gold_labels(correct, ID)
-    dsas.load_worker_assigned_labels(inputt, ID)
-    dsas.compute(3, ID)
-    time.sleep(3)
-    print pprint.pprint(dsas.get_dawid_skene(ID))
+    dsas.load_gold_labels(gold_labels, ID)
+    dsas.load_worker_assigned_labels(labels, ID)
+    dsas.compute_non_blocking(iter_per_iter, ID)
+    while 'true' not in dsas.is_computed(ID):
+        time.sleep(2)
+    print dsas.calculate_estimated_cost(ID)
+    print dsas.get_estimated_cost(ID, "url1", "porn")
+#    print dsas.print_worker_summary(False, ID)
+#    print dsas.majority_votes(ID)
+#    print pprint.pprint(dsas.get_dawid_skene(ID))
 
-
-dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/", None)
-main_path = "examples/"
-
-data = load_all(sys.argv[1])
-
-test_all(dsas, *data)
+if __name__ == "__main__":
+    dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/", None)
+    main_path = "examples/"
+    
+    data = load_all(main_path + sys.argv[1], "", "")
+    
+    test_all(dsas, *data)

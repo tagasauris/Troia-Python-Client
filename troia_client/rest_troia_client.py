@@ -36,16 +36,18 @@ class TroiaClient(object):
             return args
         new_args = {}
         for k, v in args.iteritems():
-            new_args[k] = json.dumps(v)
+            new_args[k] = json.dumps(v) if k != "id" else v
         return new_args
 
-    def _do_request_get(self, name, args=None):
-        args = self._jsonify(args)
+    def _do_request_get(self, name, args=None, jsonify=True):
+        if jsonify:
+            args = self._jsonify(args)
         req = requests.get(self.url + name, params=args, timeout=self.timeout)
         return req.content
 
-    def _do_request_post(self, name, args=None):
-        args = self._jsonify(args)
+    def _do_request_post(self, name, args=None, jsonify=True):
+        if jsonify:
+            args = self._jsonify(args)
         req = requests.post(self.url + name, data=args, timeout=self.timeout)
         return req.content
 
@@ -276,3 +278,30 @@ class TroiaClient(object):
         :param idd: ID of the job which results we want
         '''
         return json.loads(self._do_request_get("getDawidSkene", {'id': idd}))
+    
+    def get_worker_cost(self, idd, method, worker):
+        return json.loads(self._do_request_get("getWorkerCost"),
+                          {'id': idd,
+                           'method': method,
+                           'worker': worker})
+        
+    def get_evaluated_cost(self, idd, category):
+        return json.loads(self._do_request_get("getEvaluatedCost", 
+                            {"id": idd, 
+                             "category": category}))
+    
+    def get_estimated_cost(self, idd, obj, category):
+        return self._do_request_get("getEstimatedCost", 
+                            {"id": idd,
+                             "object": obj,
+                             "category": category},
+                            False)
+        
+    def calculate_evaluated_cost(self, idd):
+        return json.loads(self._do_request_get("calculateEvaluatedCost", 
+                            {"id": idd}))
+        
+    def calculate_estimated_cost(self, idd, method=None):
+        return json.loads(self._do_request_get("calculateEstimatedCost", 
+                            {"id": idd,
+                             "method": method}))
