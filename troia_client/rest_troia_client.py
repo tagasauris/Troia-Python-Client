@@ -105,7 +105,7 @@ class TroiaClient(object):
         '''
         categories = [{
             'name':c,
-            'prior':self.PRIORITY,
+            'prior':1. / len(categories),
             'misclassification_cost':d
             } for c, d in categories]
         if incremental == None:
@@ -286,22 +286,22 @@ class TroiaClient(object):
                            'worker': worker})
         
     def get_evaluated_cost(self, idd, category):
-        return json.loads(self._do_request_get("getEvaluatedCost", 
-                            {"id": idd, 
+        return json.loads(self._do_request_get("getEvaluatedCost",
+                            {"id": idd,
                              "category": category}))
     
     def get_estimated_cost(self, idd, obj, category):
-        return self._do_request_get("getEstimatedCost", 
+        return self._do_request_get("getEstimatedCost",
                             {"id": idd,
                              "object": obj,
                              "category": category},
                             False)
         
     def calculate_evaluated_cost(self, idd):
-        return json.loads(self._do_request_get("calculateEvaluatedCost", 
+        return json.loads(self._do_request_get("calculateEvaluatedCost",
                             {"id": idd}))
         
     def calculate_estimated_cost(self, idd, method=None):
-        return json.loads(self._do_request_get("calculateEstimatedCost", 
+        return json.loads(self._do_request_get("calculateEstimatedCost",
                             {"id": idd,
                              "method": method}))

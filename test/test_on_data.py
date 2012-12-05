@@ -14,8 +14,7 @@ def load_costs(path):
         el = dictt.get(c1, {})
         el[c2] = cost_
         dictt[c1] = el
-    return [{'name':c, 'prior':1., 'misclassification_cost':d}
-                                                for c, d in dictt.iteritems()]
+    return [{'name':c, 'misclassification_cost':d} for c, d in dictt.iteritems()]
 
 
 def load_correct(path):
