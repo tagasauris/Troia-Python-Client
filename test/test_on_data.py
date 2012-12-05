@@ -64,6 +64,7 @@ def test_all(dsas, gold_labels, cost, labels):
         time.sleep(2)
     print dsas.calculate_estimated_cost(ID)
     print dsas.get_estimated_cost(ID, "url1", "porn")
+    print dsas.get_worker_cost(ID, None, "worker1")
 #    print dsas.print_worker_summary(False, ID)
 #    print dsas.majority_votes(ID)
 #    print pprint.pprint(dsas.get_dawid_skene(ID))
