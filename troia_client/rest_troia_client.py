@@ -280,10 +280,11 @@ class TroiaClient(object):
         return json.loads(self._do_request_get("getDawidSkene", {'id': idd}))
     
     def get_worker_cost(self, idd, method, worker):
-        return json.loads(self._do_request_get("getWorkerCost"),
-                          {'id': idd,
-                           'method': method,
-                           'worker': worker})
+        args = {'id': idd,
+               'worker': worker}
+        if method:
+            args['method'] = method
+        return json.loads(self._do_request_get("getWorkerCost"), args)
         
     def get_evaluated_cost(self, idd, category):
         return json.loads(self._do_request_get("getEvaluatedCost",
