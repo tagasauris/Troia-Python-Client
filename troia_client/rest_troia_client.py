@@ -170,6 +170,9 @@ class TroiaClient(object):
         data = [self._create_gold_label(on, c) for on, c in data]
         return self._do_request_post("loadGoldLabels",
             {'id': idd, 'labels': data})
+        
+    def load_objects(self, data, idd=None):
+        return self._do_request_post("loadObjects", {"id": idd, "objects": data})
 
     def load_evaluation_label(self, objectn, category, idd=None):
         ''' Adds gold sample into job

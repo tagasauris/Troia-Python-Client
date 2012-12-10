@@ -19,15 +19,13 @@ def load_costs(path):
 
 def load_correct(path):
     correct = csv.reader(open(path + "/correct"), delimiter='\t')
-    correct = [x[-2:] for x in correct]
-    print correct
-    return [{"objectName": s, "correctCategory": v} for s, v in correct]
-
+    return [x[-2:] for x in correct]
 
 def load_input(path):
-    inputt = csv.reader(open(path + "/input"), delimiter='\t')
-    return [{'workerName':wn, 'objectName':on, 'categoryName':cn}
-                                                    for wn, on, cn in inputt]
+    return csv.reader(open(path + "/input"), delimiter='\t')
+    
+def load_evaldata(path):
+    return csv.reader(open(path + "/eval"), delimiter='\t')
 
 
 def load_all(path, prefix="testData_", suffix=".txt"):
@@ -56,18 +54,27 @@ def test_all(dsas, gold_labels, cost, labels):
 
     cost = transform_cost(cost)
 
-    dsas.load_categories(cost, ID)
-    dsas.load_gold_labels(gold_labels, ID)
-    dsas.load_worker_assigned_labels(labels, ID)
+    print dsas.load_categories(cost, ID)
+    print dsas.load_gold_labels(gold_labels, ID)
+    print dsas.load_worker_assigned_labels(labels, ID)
+#    print dsas.load_objects(['additional_obj1', 'additional_obj2'], ID)
+    evaldata = load_evaldata("examples/porn")
+    print dsas.load_evaluation_labels(evaldata, ID)
     dsas.compute_non_blocking(iter_per_iter, ID)
     while 'true' not in dsas.is_computed(ID):
         time.sleep(2)
-    print dsas.calculate_estimated_cost(ID)
-    print dsas.get_estimated_cost(ID, "url1", "porn")
-    print dsas.get_worker_cost(ID, None, "worker1")
-#    print dsas.print_worker_summary(False, ID)
-#    print dsas.majority_votes(ID)
+#    print dsas.calculate_estimated_cost(ID)
+#    print dsas.get_estimated_cost(ID, "additional_obj1", "porn")
+#    print dsas.get_estimated_cost(ID, "additional_obj1", "notporn")
+#    print dsas.get_estimated_cost(ID, "additional_obj2", "porn")
+#    print dsas.get_estimated_cost(ID, "additional_obj2", "notporn")
+#    print dsas.get_worker_cost(ID, None, "worker1")
+    print dsas.print_worker_summary(False, ID)
+    print dsas.majority_votes(ID)
 #    print pprint.pprint(dsas.get_dawid_skene(ID))
+
+    print dsas.calculate_evaluated_cost(ID)
+    print dsas.get_evaluated_cost(ID, "porn")
 
 if __name__ == "__main__":
     dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/", None)
