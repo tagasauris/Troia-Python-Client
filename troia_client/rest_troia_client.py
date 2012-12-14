@@ -1,5 +1,5 @@
 import json
-
+import time
 import requests
 
 
@@ -288,8 +288,9 @@ class TroiaClient(object):
         if method:
             args['method'] = method
         return json.loads(self._do_request_get("getWorkerCost", args, False))
-        
+    
     def get_evaluated_cost(self, idd, obj, method=None):
+        time.sleep(0.001)
         return json.loads(self._do_request_get("getEvaluatedCost",
                             {"id": idd,
                              "object": obj, 
@@ -297,6 +298,7 @@ class TroiaClient(object):
                             False))
     
     def get_estimated_cost(self, idd, obj, method=None):
+        time.sleep(0.001)
         return json.loads(self._do_request_get("getEstimatedCost",
                             {"id": idd,
                              "object": obj,

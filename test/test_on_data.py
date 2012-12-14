@@ -54,23 +54,24 @@ def test_all(dsas, gold_labels, cost, labels):
 
     cost = transform_cost(cost)
 
-    print dsas.load_categories(cost, ID)
-    print dsas.load_gold_labels(gold_labels, ID)
+    print dsas.load_categories(cost, ID, True)
+#    print dsas.load_gold_labels(gold_labels, ID)
     print dsas.load_worker_assigned_labels(labels, ID)
     print dsas.load_objects(['additional_obj1', 'additional_obj2'], ID)
-    evaldata = load_evaldata("examples/porn")
-    print dsas.load_evaluation_labels(evaldata, ID)
+#    evaldata = load_evaldata("examples/porn")
+#    print dsas.load_evaluation_labels(evaldata, ID)
     
+    time.sleep(1)
     for i in range(5):
-        print dsas.compute_non_blocking(1, ID)
+        print dsas.compute_non_blocking(5, ID)
         while 'true' not in dsas.is_computed(ID):
             time.sleep(2)
         for i in range(1, 6):
             print dsas.get_estimated_cost(ID, "url{}".format(i), "")
-            print dsas.get_evaluated_cost(ID, "url{}".format(i), "MinMVCost")
+#            print dsas.get_evaluated_cost(ID, "url{}".format(i), "MinMVCost")
         print "----"
 #    print dsas.calculate_estimated_cost(ID)
-    print dsas.get_estimated_cost(ID, "additional_obj1")
+#    print dsas.get_estimated_cost(ID, "additional_obj1")
 #    print dsas.get_estimated_cost(ID, "additional_obj1", "notporn")
 #    print dsas.get_estimated_cost(ID, "additional_obj2", "porn")
 #    print dsas.get_estimated_cost(ID, "additional_obj2", "notporn")
@@ -81,7 +82,7 @@ def test_all(dsas, gold_labels, cost, labels):
 #    print dsas.object_probs("url1", ID)
 
 if __name__ == "__main__":
-    dsas = TroiaClient("http://localhost:8080/GetAnotherLabel/rest/", None)
+    dsas = TroiaClient("http://localhost:8080/troia_server2/rest/", None)
     main_path = "examples/"
     
     data = load_all(main_path + sys.argv[1], "", "")
