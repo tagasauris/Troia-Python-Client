@@ -62,6 +62,14 @@ class TroiaNewClient(object):
         req = requests.delete(self.url + name, data=args, timeout=self.timeout)
         print req.content
         return json.loads(req.content)
+    
+    def _do_request_post(self, name, args=None, jsonify=True):
+        if jsonify:
+            args = self._jsonify(args)
+        print "POST", self.url + name, 'data = ', args
+        req = requests.post(self.url + name, data=args, timeout=self.timeout)
+        print req.content
+        return json.loads(req.content)
 
     def _generate_miss_costs(self, labels, label):
         d = dict([(x, 1.) for x in labels if x != label])
@@ -74,6 +82,17 @@ class TroiaNewClient(object):
             'objectName': objectn,
             'categoryName': category
         }
+        
+    def _create_cost(self, fromm, to, cost):
+        return {
+            'categoryFrom': fromm, 
+            'categoryTo': to,
+            'cost': cost}
+        
+    def _correct_label(self, obj, cat):
+        return {
+            'objectName': obj,
+            'correctCategory': cat}
 
     def ping(self):
         return self._do_request_get("status/ping")
@@ -81,9 +100,6 @@ class TroiaNewClient(object):
     def ping_db(self):
         return self._do_request_get("status/pingDB")
 
-    def exists(self, idd=None):
-        return self._do_request_get("exists", {'id': idd})
-    
     def get_jobs(self):
         return self._do_request_get("jobs")
     
@@ -105,8 +121,14 @@ class TroiaNewClient(object):
     def get_datum(self, idd, datum_id="http://google.com"):
         return self._do_request_get("jobs/{}/datums/{}".format(idd, datum_id))
     
+    
     def get_gold_datums(self, idd):
         return self._do_request_get("jobs/{}/goldDatums".format(idd))
+    
+    def put_gold_datums(self, idd, labels=[['http://google.com', 'notporn']]):
+        labels = [self._correct_label(obj, cat) for obj, cat in labels]
+        return self._do_request_get("jobs/{}/goldDatums".format(idd), {"labels": labels})
+    
     
     def get_evaluation_datums(self, idd):
         return self._do_request_get("jobs/{}/evaluationDatums".format(idd))
@@ -172,18 +194,19 @@ class TroiaNewClient(object):
     def delete_job(self, idd):
         return self._do_request_delete("jobs/", {"id": idd})
     
-    # TODO:
+
     def get_cost_matrix(self, idd):
-        return self._do_request_get("jobs/{}/costMatrix".format(idd))
+        return self._do_request_get("jobs/{}/costs".format(idd))
     
-    def put_cost_matrix(self, idd, cm=None):
-        return self._do_request_put("jobs/{}/costMatrix".format(idd), {'costMatrix': cm})
+    def put_cost_matrix(self, idd, cm=[
+            ['porn', 'porn', 0],
+            ['notporn', 'porn', 1],
+            ['porn', 'notporn', 1],
+            ['notporn', 'notporn', 0]]):
+        costs = [self._create_cost(f, t, c) for f, t, c in cm]
+        return self._do_request_put("jobs/{}/costs".format(idd), {'costs': costs})
     
-    
-    def put_votes(self, idd, votes=None):
-        return self._do_request_put("jobs/{}/votes".format(idd), {'votes': votes})
-    
-    
+
     def get_categories(self, idd):
         return self._do_request_get("jobs/{}/categories".format(idd))
     
@@ -192,10 +215,6 @@ class TroiaNewClient(object):
             for c in categories]
         return self._do_request_put("jobs/{}/categories".format(idd), {'categories': categories})
     
-    
-    def put_calculate(self, idd, alg="ds"):
-        return self._do_request_put("jobs/{}/prediction/{}/calculate".format(idd, alg), {})
-    
-    def put_reset(self, idd):
-        return self._do_request_put("jobs/{}/reset".format(idd))
 
+    def post_compute(self, idd):
+        return self._do_request_post("jobs/{}/compute/".format(idd), {'iterations': 20})
