@@ -11,32 +11,23 @@ class TestClient(unittest.TestCase):
 
     def setUp(self):
         self.tc = TroiaNewClient(self.base_url)
-        self.ID = "test_id"
 #        self.tc.put_job(self.ID)
 #        self.tc.load_categories(self._labels(), self.ID)
 
     def tearDown(self):
-        self.tc.delete_job(self.ID)
+        self.tc.delete_job()
 
     def testPing(self):
         r = self.tc.ping()
         self.assertTrue(r['status'] == 'Success')
         # I wanted to parse date but it its in some wired form so..
 
-    def testReset(self):
-        self.assertTrue(self.tc.put_reset(self.ID)['status'] == 'Success')
-        self.assertFalse(self.tc.exists(self.ID)['result'])
-
-    def testExists(self):
-        self.assertFalse(self.tc.exists(self.ID + "0")['result'])
-        self.assertTrue(self.tc.exists(self.ID)['result'])
-        
     def testAllMethods(self):
         for method_name in sorted([method for method in dir(self.tc) if callable(getattr(self.tc, method))], reverse=True):
             if not method_name.startswith("_"):
                 print method_name
                 try:
-                    res = getattr(self.tc, method_name)(self.ID)
+                    res = getattr(self.tc, method_name)()
                     print 'OK', res
                 except Exception as ex:
                     print ex
